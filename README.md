@@ -15,5 +15,5 @@ This is a simple implementation of a **Cryptographic File System(CFS)** done as 
 ## Steps to Run this Project:
 - Assuming GNU C++ compiler is installed
 - Run the following commands:
-- To Compile --> `g++ -std=c++17 main.cpp CFS_headers.h`
+- To Compile --> `g++ -std=c++17 main.cpp`
 - To Execute --> For windows: `.\a.exe` (or) For Linux: `./a.out`
