@@ -139,7 +139,8 @@ void file_create()
     string file_name;
     cout << "Enter the File name to CREATE: ";
     cin >> file_name;
-
+    file_name += ".txt";
+    
     if (file_state.count(file_name))
     {
         cout << "File name already exists!!";
@@ -147,7 +148,6 @@ void file_create()
     }
 
     fstream file;
-    file_name += ".txt";
     file.open(file_name, ios::out);
     if (!file)
     {
@@ -159,10 +159,11 @@ void file_create()
         file_state[file_name] = false;
         string content;
         cout << "Enter the contents of the file: ";
-        cin >> content;
-        file << content;
-        cout << "File CREATED successfully !!" << endl;
+        cin.ignore();
+        getline(cin, content);
+        file << content << endl;
         file.close();
+        cout << "File CREATED successfully !!" << endl;
     }
     char choice;
     cout << "Do you want to SECURE this file(y/n): ";
