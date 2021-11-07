@@ -149,7 +149,7 @@ void file_create()
     fstream file;
     file_name += ".txt";
     file.open(file_name, ios::out);
-    if (file)
+    if (!file)
     {
         cout << "File not created!";
         return;
