@@ -1,3 +1,4 @@
+#include <conio.h>
 #include <iostream>
 #include <filesystem>
 #include <fstream>
@@ -14,6 +15,45 @@ map<int, string> auth;
 map<string, int> keys;
 map<string, bool> file_state;
 map<string, int> file_auth;
+
+enum IN
+{
+    IN_BACK = 8, // 08 is ASCII for backspace
+    IN_RET = 13  // 13 is ASCII for carriage return
+};
+
+string pass_encrpyt(char sp = '*')
+{
+    string passwd = "";
+    char ch_ipt;
+
+    while (true)
+    {
+        ch_ipt = getch();
+        if (ch_ipt == IN::IN_RET)
+        {
+            cout << endl;
+            return passwd;
+        }
+        else if (ch_ipt == IN::IN_BACK && passwd.length() != 0)
+        {
+            passwd.pop_back();
+            // Cout statement is very
+            // important as it will erase
+            // previously printed character
+            cout << "\b \b";
+            continue;
+        }
+        // Without using this, program
+        // will crash as \b can't be
+        // print in beginning of line
+        else if (ch_ipt == IN::IN_BACK && passwd.length() == 0)
+            continue;
+
+        passwd.push_back(ch_ipt);
+        cout << sp;
+    }
+}
 
 void init_file_system()
 {
@@ -51,7 +91,7 @@ int User_auth()
             {
                 string pass;
                 cout << "Enter your password: ";
-                cin >> pass;
+                pass = pass_encrpyt();
                 if (auth[uid] == pass)
                     return uid;
                 else
@@ -68,7 +108,7 @@ int User_auth()
             string pass;
             cout << "\tYour New User Id is: " << uid << endl;
             cout << "\tEnter your password: ";
-            cin >> pass;
+            pass = pass_encrpyt();
             auth[uid] = pass;
             cout << "\nSuccessfully Registered!!" << endl;
             return uid;
@@ -140,7 +180,7 @@ void file_create()
     cout << "Enter the File name to CREATE: ";
     cin >> file_name;
     file_name += ".txt";
-    
+
     if (file_state.count(file_name))
     {
         cout << "File name already exists!!";
@@ -194,7 +234,7 @@ void file_delete()
             cout << "\tEnter User Id: ";
             cin >> uid;
             cout << "\tEnter Password: ";
-            cin >> pass;
+            pass = pass_encrpyt();
 
             if (auth[uid] == pass)
             {
@@ -262,7 +302,7 @@ void file_open()
             cout << "\tEnter User Id: ";
             cin >> uid;
             cout << "\tEnter Password: ";
-            cin >> pass;
+            pass = pass_encrpyt();
 
             if (auth[uid] == pass)
             {
@@ -321,7 +361,7 @@ void file_unsecure()
             cout << "\tEnter User Id: ";
             cin >> uid;
             cout << "\tEnter Password: ";
-            cin >> pass;
+            pass = pass_encrpyt();
 
             if (auth[uid] == pass)
             {
@@ -386,10 +426,9 @@ int main()
             return 0;
             break;
         default:
-            cout << "Enter a Valid Choice" << endl;
+            cout << "Enter a Valid Choice !!" << endl;
             break;
         }
     }
-
     return 0;
 }
