@@ -1,11 +1,39 @@
-#include <conio.h>
 #include <iostream>
 #include <filesystem>
 #include <fstream>
 #include <string>
 #include <map>
+#ifndef _win32
+    #include <termios.h>
+    #include<unistd.h>
+    char getch(void)
+    {
+        char buf = 0;
+        struct termios old = {0};
+        fflush(stdout);
+        if(tcgetattr(0, &old) < 0)
+            perror("tcsetattr()");
+        old.c_lflag &= ~ICANON;
+        old.c_lflag &= ~ECHO;
+        old.c_cc[VMIN] = 1;
+        old.c_cc[VTIME] = 0;
+        if(tcsetattr(0, TCSANOW, &old) < 0)
+            perror("tcsetattr ICANON");
+        if(read(0, &buf, 1) < 0)
+            perror("read()");
+        old.c_lflag |= ICANON;
+        old.c_lflag |= ECHO;
+        if(tcsetattr(0, TCSADRAIN, &old) < 0)
+            perror("tcsetattr ~ICANON");
+        return buf;
+    }
+#else
+#include<conio.h>
+#endif
 #define LOW 25
 #define HIGH 50
+
+
 
 using namespace std;
 namespace fs = filesystem;
@@ -30,7 +58,12 @@ string pass_encrpyt(char sp = '*')
     while (true)
     {
         ch_ipt = getch();
-        if (ch_ipt == IN::IN_RET)
+        // if (ch_ipt == IN::IN_RET)
+        // {
+        //     cout << endl;
+        //     return passwd;
+        // }
+        if (ch_ipt == '\n')
         {
             cout << endl;
             return passwd;
